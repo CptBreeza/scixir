@@ -1,5 +1,6 @@
 defmodule Scixir.Server.Handler.Worker do
   use GenServer
+  require Logger
 
   def start_link(options) do
     GenServer.start_link(__MODULE__, nil, options)
@@ -7,13 +8,19 @@ defmodule Scixir.Server.Handler.Worker do
 
   @impl true
   def init(state) do
-    IO.puts("Starting Worker")
+    name =
+      self()
+      |> :erlang.process_info()
+      |> Keyword.get(:registered_name)
+
+    Logger.debug("Worker \"#{name}\" started")
+
     {:ok, state}
   end
 
   @impl true
   def handle_cast({:handle, data}, state) do
-    Scixir.Handler.handle(data)
+    Scixir.Engine.handle(data)
     {:noreply, state}
   end
 end

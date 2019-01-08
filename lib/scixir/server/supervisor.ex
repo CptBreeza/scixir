@@ -1,5 +1,6 @@
 defmodule Scixir.Server.Supervisor do
   use Supervisor
+  require Logger
 
   @default_worker 5
 
@@ -8,6 +9,8 @@ defmodule Scixir.Server.Supervisor do
   end
 
   def init(_args) do
+    Logger.info("Initializing server")
+
     %{url: url, notification_key: notification_key, worker: worker} = Map.new(Application.get_env(:scixir, :redis))
     worker = ensure_integer(worker, @default_worker)
 

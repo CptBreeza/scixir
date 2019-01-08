@@ -10,5 +10,10 @@ defmodule Scixir.Application do
 
     opts = [strategy: :one_for_one, name: Scixir.Supervisor]
     Supervisor.start_link(children, opts)
+
+    receive do
+      {:DOWN, _, _, _, _} ->
+        :ok
+    end
   end
 end

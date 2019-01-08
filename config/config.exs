@@ -6,4 +6,4 @@ config :scixir, :redis,
   worker: 5
 
 config :logger, :console,
-  format: "$time $metadata[$level] $levelpad$message\n"
+  format: "$dateT$time $metadata[$level] $levelpad$message\n"

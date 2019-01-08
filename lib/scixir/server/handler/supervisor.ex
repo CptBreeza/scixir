@@ -11,7 +11,7 @@ defmodule Scixir.Server.Handler.Supervisor do
     Logger.info("Initializing workers")
 
     children =
-      for i <- 1..worker do
+      for i <- 0..(worker - 1) do
         Supervisor.child_spec({Scixir.Server.Handler.Worker, [name: :"scixir_handler_worker_#{i}"]}, id: {Scixir.Server.Handler.Worker, i})
       end
 

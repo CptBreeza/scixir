@@ -14,14 +14,16 @@ defmodule Scixir.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {Scixir.Application, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:mogrify, "~> 0.7.0"}
+      {:mogrify, "~> 0.7.0"},
+      {:redix, "~> 0.9.0"}
     ]
   end
 end

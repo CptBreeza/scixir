@@ -1,4 +1,5 @@
 %{
+  "jason": {:hex, :jason, "1.1.2", "b03dedea67a99223a2eaf9f1264ce37154564de899fd3d8b9a21b1a6fd64afe7", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm"},
   "mogrify": {:hex, :mogrify, "0.7.0", "f7af9a42a3b17818c9841dcfa12f7416c4c34078872eb79b2dc55e15670c3a7f", [:mix], [], "hexpm"},
   "redix": {:hex, :redix, "0.9.0", "c631c921354587e054bf1e2a6b7d0120d617352fc42b624b9ca79ea484d0326c", [:mix], [], "hexpm"},
 }

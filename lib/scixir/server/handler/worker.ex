@@ -2,6 +2,8 @@ defmodule Scixir.Server.Handler.Worker do
   use GenServer
   require Logger
 
+  alias Scixir.Engine.Payload
+
   def start_link(options) do
     GenServer.start_link(__MODULE__, nil, options)
   end
@@ -20,7 +22,7 @@ defmodule Scixir.Server.Handler.Worker do
 
   @impl true
   def handle_cast({:handle, data}, state) do
-    Scixir.Engine.handle(data)
+    Scixir.Engine.handle(%Payload{data: data})
     {:noreply, state}
   end
 end

@@ -23,7 +23,8 @@ defmodule Scixir.MixProject do
   defp deps do
     [
       {:mogrify, "~> 0.7.0"},
-      {:redix, "~> 0.9.0"}
+      {:redix, "~> 0.9.0"},
+      {:jason, "~> 1.1"}
     ]
   end
 end

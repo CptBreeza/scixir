@@ -1,36 +1,27 @@
 defmodule Scixir.Server.EventListener do
   use GenServer
-  require Logger
 
-  defstruct [
-    :notification_key,
-    :worker
-  ]
-
-  def start_link({args, options}) do
-    GenServer.start_link(__MODULE__, args, options)
+  def start_link(notification_key) do
+    GenServer.start_link(__MODULE__, notification_key, name: __MODULE__)
   end
 
   @impl true
-  def init({notification_key, worker}) do
-    Logger.info("Connecting to Redis")
-
-    {:ok, %__MODULE__{notification_key: notification_key, worker: worker}, {:continue, :up}}
+  def init(notification_key) do
+    {:ok, notification_key, {:continue, :up}}
   end
 
   @impl true
-  def handle_continue(:up, %__MODULE__{} = state) do
-    loop(state.notification_key, state.worker)
+  def handle_continue(:up, notification_key) do
+    receive_loop(notification_key)
   end
 
-  defp loop(notification_key, worker) do
+  defp receive_loop(notification_key) do
     with {:ok, data} <- Redix.command(Scixir.Redis, ["BLPOP", notification_key, 0], timeout: :infinity) do
-      Scixir.Server.Handler.handle(data)
-      loop(notification_key, worker)
+      IO.puts "event received"
+      Scixir.Server.EventManager.receive_event(data)
+      receive_loop(notification_key)
     else
-      _error ->
-        Logger.error("An error occured")
-        {:stop, "error", %__MODULE__{}}
+      _ -> {:stop, "error", notification_key}
     end
   end
 end

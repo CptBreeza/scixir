@@ -1,12 +1,16 @@
 defmodule Scixir.Engine do
-  use Scixir.Engine.Middleware
+  import Mogrify
 
-  alias Scixir.Engine
+  def process(%{intermediate_storage: intermediate_storage} = event, %{versions: versions}) do
+    %{in_file: file} = intermediate_storage
 
-  middleware Engine.Middlewares.Parser
-  middleware Engine.Middlewares.Logger
+    out_files =
+      Enum.map(versions, fn {version_name, size} ->
+        outfile_path = Path.rootname(file.path) <> "_" <> to_string(version_name) <> Path.extname(file.path)
+        open(file.path) |> resize_to_fill(size) |> gravity("Center") |> save(path: outfile_path)
+        %Arc.File{path: outfile_path}
+      end)
 
-  handle fn payload ->
-    Engine.Adapters.Minio.handle(payload)
+    %{event | intermediate_storage: Map.put(intermediate_storage, :out_files, out_files)}
   end
 end

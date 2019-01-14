@@ -2,8 +2,6 @@ defmodule Scixir.Server.Supervisor do
   use Supervisor
   require Logger
 
-  @default_worker 5
-
   def start_link do
     Supervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
@@ -11,19 +9,33 @@ defmodule Scixir.Server.Supervisor do
   def init(_args) do
     Logger.info("Initializing server")
 
-    %{url: url, notification_key: notification_key, worker: worker} = Map.new(Application.get_env(:scixir, :redis))
-    worker = ensure_integer(worker, @default_worker)
+    %{url: url, notification_key: notification_key} = Map.new(Application.get_env(:scixir, :redis))
+
+    definition = Scixir.Engine.Minio.Definition
+    demands =
+      %{
+        max_demand: 5,
+        min_demand: 1
+      }
+    config =
+      %{
+        versions:
+          %{
+            "large" => "1000x1000",
+            "medium" => "500x500",
+            "small" => "300x300"
+          }
+      }
 
     children = [
       {Redix, {url, [name: Scixir.Redis]}},
-      {Scixir.Server.EventListener, {{notification_key, 5}, [name: Scixir.Server.EventListener]}},
-      {Scixir.Server.Handler.Supervisor, {worker, [name: Scixir.Server.Handler.Supervisor]}}
+      Scixir.Server.EventManager,
+      {Scixir.Server.EventListener, notification_key},
+      {Scixir.Server.Minio.PreProcessor, {definition, demands}},
+      {Scixir.Server.Minio.Processor, {config, demands}},
+      {Scixir.Server.Minio.PostProcessor, {definition, demands}},
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
   end
-
-  def ensure_integer(data, _default) when is_binary(data), do: String.to_integer(data)
-  def ensure_integer(data, _default) when is_integer(data), do: data
-  def ensure_integer(_data, default), do: default
 end

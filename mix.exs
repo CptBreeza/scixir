@@ -24,7 +24,10 @@ defmodule Scixir.MixProject do
     [
       {:mogrify, "~> 0.7.0"},
       {:redix, "~> 0.9.0"},
-      {:jason, "~> 1.1"}
+      {:jason, "~> 1.1"},
+      {:gen_stage, "~> 0.14"},
+      {:arc, "0.10.0"},
+      {:elixir_uuid, "~> 1.2"}
     ]
   end
 end

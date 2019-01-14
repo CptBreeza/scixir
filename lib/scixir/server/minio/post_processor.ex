@@ -22,12 +22,15 @@ defmodule Scixir.Server.Minio.PostProcessor do
   @impl true
   def handle_events(events, _from, definition) do
     Enum.each(events, fn event ->
-      Enum.each(event.intermediate_storage.out_files, &definition.upload(&1))
+      Enum.each(
+        event.intermediate_storage.out_files,
+        &definition.upload(event.intermediate_storage.in_file.file_metadata, &1)
+      )
 
       event
       |> Event.finish_processing()
       |> LoggingHelper.log_event_complete()
-      |> Scixir.Redis.persist_failure()
+      |> definition.clean_local_storage()
     end)
 
     {:noreply, [], definition}

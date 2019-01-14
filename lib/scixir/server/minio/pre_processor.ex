@@ -23,12 +23,15 @@ defmodule Scixir.Server.Minio.PreProcessor do
   def handle_events(events, _from, definition) do
     events =
       Enum.map(events, fn event ->
-        event
-        |> Event.from_minio()
-        |> Event.start_processing()
-        |> LoggingHelper.log_event_start()
-        |> Map.update!(:intermediate_storage, fn storage ->
-          Map.put(storage, :in_file, definition.download(event))
+        event =
+          event
+          |> Event.start_processing()
+          |> LoggingHelper.log_event_start()
+
+        Map.update!(event, :intermediate_storage, fn storage ->
+          file_metadata = definition.analyze_event(event)
+          file_path = definition.download(file_metadata)
+          Map.put(storage, :in_file, %{file_metadata: file_metadata, file_path: file_path})
         end)
       end)
 

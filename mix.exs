@@ -27,7 +27,11 @@ defmodule Scixir.MixProject do
       {:jason, "~> 1.1"},
       {:gen_stage, "~> 0.14"},
       {:arc, "0.10.0"},
-      {:elixir_uuid, "~> 1.2"}
+      {:elixir_uuid, "~> 1.2"},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:httpoison, "~> 1.4.0", override: true},
+      {:sweet_xml, "~> 0.6.5"}
     ]
   end
 end

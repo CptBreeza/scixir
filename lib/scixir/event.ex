@@ -30,4 +30,11 @@ defmodule Scixir.Event do
       metrics: Map.merge(metrics, %{finish_processing_at: now, processing_time: processing_time})
     }
   end
+
+  def scixir_generated?(%__MODULE__{data: data}) do
+    "true" == get_in(data, [:s3, :object, :userMetadata, :"X-Amz-Meta-Scixir_generated"])
+  end
+
+  def object_created?(%__MODULE__{data: %{eventName: "s3:ObjectCreated" <> _}}), do: true
+  def object_created?(%__MODULE__{}), do: false
 end

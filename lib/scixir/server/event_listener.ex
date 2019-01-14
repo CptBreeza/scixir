@@ -1,6 +1,8 @@
 defmodule Scixir.Server.EventListener do
   use GenServer
 
+  alias Scixir.Event
+
   def start_link(notification_key) do
     GenServer.start_link(__MODULE__, notification_key, name: __MODULE__)
   end
@@ -17,11 +19,17 @@ defmodule Scixir.Server.EventListener do
 
   defp receive_loop(notification_key) do
     with {:ok, data} <- Redix.command(Scixir.Redis, ["BLPOP", notification_key, 0], timeout: :infinity) do
-      IO.puts "event received"
-      Scixir.Server.EventManager.receive_event(data)
+      event = Event.from_minio(data)
+      if event_valid?(event) do
+        Scixir.Server.EventManager.receive_event(event)
+      end
       receive_loop(notification_key)
     else
       _ -> {:stop, "error", notification_key}
     end
+  end
+
+  defp event_valid?(event) do
+    Event.object_created?(event) and not Event.scixir_generated?(event)
   end
 end

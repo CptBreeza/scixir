@@ -20,16 +20,12 @@ defmodule Scixir.Server.EventListener do
   defp receive_loop(notification_key) do
     with {:ok, data} <- Redix.command(Scixir.Redis, ["BLPOP", notification_key, 0], timeout: :infinity) do
       event = Event.from_minio(data)
-      if event_valid?(event) do
+      unless Event.scixir_generated?(event) do
         Scixir.Server.EventManager.receive_event(event)
       end
       receive_loop(notification_key)
     else
       _ -> {:stop, "error", notification_key}
     end
-  end
-
-  defp event_valid?(event) do
-    Event.object_created?(event) and not Event.scixir_generated?(event)
   end
 end

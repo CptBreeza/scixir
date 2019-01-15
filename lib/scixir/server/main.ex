@@ -21,12 +21,11 @@ defmodule Scixir.Server.Main do
   def handle_continue(:up, %__MODULE__{definition: definition, config: config}) do
     [Scixir.Server.EventManager]
     |> Flow.from_stages()
-    |> Flow.map(&Minio.download_orig_files(&1, definition))
+    |> Flow.map(&Minio.download_images(&1, definition))
     |> Flow.partition()
-    |> Flow.reduce(fn -> [] end, fn event, _events ->
-      Minio.process_and_upload(event, definition, config)
-      []
-    end)
-    |> Enum.to_list()
+    |> Flow.map(&Minio.resize_images(&1, config))
+    |> Flow.partition()
+    |> Flow.map(&Minio.upload_images(&1, definition))
+    |> Flow.run()
   end
 end

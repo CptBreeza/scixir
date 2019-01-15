@@ -32,7 +32,8 @@ defmodule Scixir.MixProject do
       {:ex_aws_s3, "~> 2.0"},
       {:httpoison, "~> 1.4.0", override: true},
       {:sweet_xml, "~> 0.6.5"},
-      {:flow, "~> 0.14.3"}
+      {:flow, "~> 0.14.3"},
+      {:decorator, "~> 1.2"}
     ]
   end
 end

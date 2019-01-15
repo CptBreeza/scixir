@@ -2,7 +2,10 @@ defmodule Scixir.Server.Minio do
   alias Scixir.Event
   alias Scixir.Utilities.LoggingHelper
 
-  def download_orig_files(%Event{} = event, definition) do
+  use Scixir.Benchmark.ProgressDecorator
+
+  @decorate progress
+  def download_images(%Event{} = event, definition) do
     event =
       event
       |> Event.start_processing()
@@ -15,9 +18,13 @@ defmodule Scixir.Server.Minio do
     end)
   end
 
-  def process_and_upload(%Event{} = event, definition, config) do
-    event = Scixir.Engine.process(event, config)
+  @decorate progress
+  def resize_images(%Event{} = event, config) do
+    Scixir.Engine.process(event, config)
+  end
 
+  @decorate progress
+  def upload_images(%Event{} = event, definition) do
     Enum.each(
       event.intermediate_storage.out_files,
       &definition.upload(event.intermediate_storage.in_file.file_metadata, &1)

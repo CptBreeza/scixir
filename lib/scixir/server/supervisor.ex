@@ -22,7 +22,10 @@ defmodule Scixir.Server.Supervisor do
           }
       }
 
+    progress_scopes = ~w{download_images resize_images upload_images}a
+
     children = [
+      {Scixir.Benchmark.Progress, progress_scopes},
       {Redix, {url, [name: Scixir.Redis]}},
       {Scixir.Server.EventManager, :ok},
       {Scixir.Server.EventListener, notification_key},

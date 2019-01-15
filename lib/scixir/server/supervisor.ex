@@ -12,11 +12,6 @@ defmodule Scixir.Server.Supervisor do
     %{url: url, notification_key: notification_key} = Map.new(Application.get_env(:scixir, :redis))
 
     definition = Scixir.Engine.Minio.Definition
-    demands =
-      %{
-        max_demand: 5,
-        min_demand: 1
-      }
     config =
       %{
         versions:
@@ -29,11 +24,9 @@ defmodule Scixir.Server.Supervisor do
 
     children = [
       {Redix, {url, [name: Scixir.Redis]}},
-      Scixir.Server.EventManager,
+      {Scixir.Server.EventManager, :ok},
       {Scixir.Server.EventListener, notification_key},
-      {Scixir.Server.Minio.PreProcessor, {definition, demands}},
-      {Scixir.Server.Minio.Processor, {config, demands}},
-      {Scixir.Server.Minio.PostProcessor, {definition, demands}},
+      {Scixir.Server.Main, [definition, config]}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

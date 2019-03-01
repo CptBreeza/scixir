@@ -1,5 +1,11 @@
 defmodule Scixir.Server.Main do
-  @moduledoc false
+  @moduledoc """
+  Main flow.
+
+  1. Download images from OSS
+  2. Resize images
+  3. Upload resized versions of images to OSS
+  """
 
   use Flow
   require Logger
@@ -16,12 +22,7 @@ defmodule Scixir.Server.Main do
     Flow.start_link(pipeline, name: __MODULE__)
   end
 
-  # def init([definition, config]) do
-  #   {:ok, %__MODULE__{definition: definition, config: config}, {:continue, :up}}
-  # end
-
-  # def handle_continue(:up, %__MODULE__{definition: definition, config: config}) do
-  def flow([definition, config]) do
+  def flow({definition, config}) do
     [Scixir.Server.EventManager]
     |> Flow.from_stages(min_demand: 6, max_demand: 40, stages: 1)
     |> Flow.map(&Minio.download_images(&1, definition))
@@ -29,6 +30,5 @@ defmodule Scixir.Server.Main do
     |> Flow.map(&Minio.resize_images(&1, config))
     |> Flow.partition(min_demand: 1, max_demand: 8, stages: 1)
     |> Flow.each(&Minio.upload_images(&1, definition))
-    # |> Enum.to_list()
   end
 end

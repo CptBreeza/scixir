@@ -1,7 +1,7 @@
 use Mix.Config
 
 config :scixir, :redis,
-  url: System.get_env("REDIS_HOST"),
+  host: System.get_env("REDIS_HOST"),
   notification_key: System.get_env("MINIO_NOTIFICATION_KEY"),
   worker: System.get_env("REDIS_LISTENER_WORKER")
 

@@ -1,4 +1,6 @@
 defmodule Scixir.Application do
+  @moduledoc false
+
   use Application
 
   def start(_type, _args) do
@@ -8,12 +10,7 @@ defmodule Scixir.Application do
       supervisor(Scixir.Server.Supervisor, [])
     ]
 
-    opts = [strategy: :one_for_one, name: Scixir.Supervisor]
+    opts = [strategy: :one_for_one]
     Supervisor.start_link(children, opts)
-
-    # receive do
-    #   {:DOWN, _, _, _, _} ->
-    #     :ok
-    # end
   end
 end

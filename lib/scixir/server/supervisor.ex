@@ -1,6 +1,10 @@
 defmodule Scixir.Server.Supervisor do
+  @moduledoc false
+
   use Supervisor
   require Logger
+
+  @progress_scopes ~w{download_images debug resize_images upload_images}a
 
   def start_link do
     Supervisor.start_link(__MODULE__, [], name: __MODULE__)
@@ -9,27 +13,22 @@ defmodule Scixir.Server.Supervisor do
   def init(_args) do
     Logger.info("Initializing server")
 
-    %{url: url, notification_key: notification_key} = Map.new(Application.get_env(:scixir, :redis))
-
-    definition = Scixir.Engine.Minio.Definition
-    config =
-      %{
-        versions:
-          %{
-            "large" => "1000x1000",
-            "medium" => "500x500",
-            "small" => "300x300"
-          }
-      }
-
-    progress_scopes = ~w{download_images debug resize_images upload_images}a
+    %{host: host, notification_key: notification_key} = Map.new(Application.get_env(:scixir, :redis))
 
     children = [
-      {Scixir.Benchmark.Progress, progress_scopes},
-      {Redix, {url, [name: Scixir.Redis]}},
+      # Collect metrics of stages
+      {Scixir.Benchmark.Progress, @progress_scopes},
+
+      # Redis client
+      {Redix, {host, [name: Scixir.Redis]}},
+
+      # Event store
       {Scixir.Server.EventManager, :ok},
+
+      # Event listener for Redis
       {Scixir.Server.EventListener, notification_key},
-      {Scixir.Server.Main, [definition, config]}
+
+      {Scixir.Server.Main, {Scixir.Engine.Minio.Definition, Application.get_env(:scixir, :versions)}}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

@@ -1,4 +1,10 @@
 defmodule Scixir.Server.EventListener do
+  @moduledoc """
+  Listen to Redis for events published by Minio, and reject events that is generated
+  by Scixir's action. Events are decoded and pushed to EventManager as soon as it was
+  received.
+  """
+
   use GenServer
 
   alias Scixir.Event

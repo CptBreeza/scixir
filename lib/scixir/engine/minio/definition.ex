@@ -35,6 +35,12 @@ defmodule Scixir.Engine.Minio.Definition do
   end
 
   def download(%FileMetadata{} = file_metadata) do
+    Task.await(
+      Task.async(fn -> do_download(file_metadata) end)
+    )
+  end
+
+  defp do_download(file_metadata) do
     {:ok, file_path} = Downloader.download(file_metadata)
     file_path
   end

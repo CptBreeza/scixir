@@ -5,6 +5,7 @@ defmodule Scixir.Server.EventManager do
   """
 
   use GenStage
+  require Logger
 
   def start_link(:ok) do
     GenStage.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -27,6 +28,7 @@ defmodule Scixir.Server.EventManager do
   end
 
   def handle_cast({:push, event}, {queue, demand}) do
+    Logger.info("Event #{event.uuid} received")
     dispatch_events(:queue.in(event, queue), demand, [])
   end
 

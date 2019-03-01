@@ -6,6 +6,7 @@ defmodule Scixir.Server.EventListener do
   """
 
   use GenServer
+  require Logger
 
   alias Scixir.Event
 
@@ -15,6 +16,7 @@ defmodule Scixir.Server.EventListener do
 
   @impl true
   def init(notification_key) do
+    Logger.info("Start listening to Redis##{notification_key}")
     {:ok, notification_key, {:continue, :up}}
   end
 

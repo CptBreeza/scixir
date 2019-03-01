@@ -15,11 +15,7 @@ defmodule Scixir.Server.Minio do
 
     Map.update!(event, :intermediate_storage, fn storage ->
       file_metadata = definition.analyze_event(event)
-      Logger.debug("#{event.uuid} starts to download")
-      # file_path = definition.download(file_metadata)
-      task = Task.async(fn -> definition.download(file_metadata) end)
-      file_path = Task.await(task)
-      Logger.debug("#{event.uuid} complete download")
+      file_path = definition.download(file_metadata)
       Map.put(storage, :in_file, %{file_metadata: file_metadata, file_path: file_path})
     end)
   end

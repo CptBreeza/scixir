@@ -8,18 +8,13 @@ defmodule Scixir.Server.Main do
   """
 
   use Flow
-  require Logger
 
   alias Scixir.Server.Minio
 
-  defstruct [
-    :definition,
-    :config
-  ]
-
   def start_link(args) do
-    pipeline = flow(args)
-    Flow.start_link(pipeline, name: __MODULE__)
+    args
+    |> flow()
+    |> Flow.start_link(name: __MODULE__)
   end
 
   def flow({definition, config}) do

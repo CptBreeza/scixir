@@ -23,3 +23,6 @@ erl_crash.dump
 scixir-*.tar
 
 /priv
+
+dev.exs
+prod.exs

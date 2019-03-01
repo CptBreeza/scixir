@@ -4,7 +4,7 @@ defmodule Scixir.Server.Supervisor do
   use Supervisor
   require Logger
 
-  @progress_scopes ~w{download_images debug resize_images upload_images}a
+  @progress_scopes ~w{download_images resize_images upload_images}a
 
   def start_link do
     Supervisor.start_link(__MODULE__, [], name: __MODULE__)

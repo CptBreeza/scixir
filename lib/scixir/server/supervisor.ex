@@ -16,9 +16,6 @@ defmodule Scixir.Server.Supervisor do
     %{host: host, notification_key: notification_key} = Map.new(Application.get_env(:scixir, :redis))
 
     children = [
-      # Collect metrics of stages
-      {Scixir.Benchmark.Progress, @progress_scopes},
-
       # Redis client
       {Redix, {host, [name: Scixir.Redis]}},
 
@@ -31,6 +28,13 @@ defmodule Scixir.Server.Supervisor do
       {Scixir.Server.Main, {Scixir.Engine.Minio.Definition, Application.get_env(:scixir, :versions)}}
     ]
 
-    Supervisor.init(children, strategy: :one_for_one)
+    if :dev === Mix.env() do
+      Supervisor.init(
+        [{Scixir.Benchmark.Progress, @progress_scopes} | children],
+        strategy: :one_for_one
+      )
+    else
+      Supervisor.init(children, strategy: :one_for_one)
+    end
   end
 end

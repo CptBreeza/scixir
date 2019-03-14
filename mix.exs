@@ -5,7 +5,7 @@ defmodule Scixir.MixProject do
     [
       app: :scixir,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -33,7 +33,8 @@ defmodule Scixir.MixProject do
       {:httpoison, "~> 1.4.0", override: true},
       {:sweet_xml, "~> 0.6.5"},
       {:flow, "~> 0.14.3"},
-      {:decorator, "~> 1.2"}
+      {:decorator, "~> 1.2"},
+      {:distillery, "~> 2.0"}
     ]
   end
 end

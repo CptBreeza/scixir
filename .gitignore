@@ -25,4 +25,3 @@ scixir-*.tar
 /priv
 
 dev.exs
-prod.exs

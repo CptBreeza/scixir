@@ -5,6 +5,7 @@ defmodule Scixir.Server.Supervisor do
   require Logger
 
   @progress_scopes ~w{download_images resize_images upload_images}a
+  @mix_env Mix.env()
 
   def start_link do
     Supervisor.start_link(__MODULE__, [], name: __MODULE__)
@@ -28,7 +29,7 @@ defmodule Scixir.Server.Supervisor do
       {Scixir.Server.Main, {Scixir.Engine.Minio.Definition, Application.get_env(:scixir, :versions)}}
     ]
 
-    if :dev === Mix.env() do
+    if :dev === @mix_env do
       Supervisor.init(
         [{Scixir.Benchmark.Progress, @progress_scopes} | children],
         strategy: :one_for_one

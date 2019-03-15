@@ -14,7 +14,7 @@ defmodule Scixir.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :redix],
       mod: {Scixir.Application, []}
     ]
   end

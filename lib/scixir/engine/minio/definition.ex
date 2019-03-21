@@ -13,7 +13,7 @@ defmodule Scixir.Engine.Minio.Definition do
 
   def analyze_event(%{data: data}) do
     bucket = Kernel.get_in(data, [:s3, :bucket, :name])
-    object_key = Kernel.get_in(data, [:s3, :object, :key])
+    object_key = URI.decode(Kernel.get_in(data, [:s3, :object, :key]))
     dirname = Path.dirname(object_key)
     basename = Path.basename(object_key)
 

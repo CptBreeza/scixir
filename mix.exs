@@ -34,7 +34,8 @@ defmodule Scixir.MixProject do
       {:sweet_xml, "~> 0.6.5"},
       {:flow, "~> 0.14.3"},
       {:decorator, "~> 1.2"},
-      {:distillery, "~> 2.0"}
+      {:distillery, "~> 2.0"},
+      {:logger_file_backend, github: "onkel-dirtus/logger_file_backend", only: [:prod, :dev]}
     ]
   end
 end

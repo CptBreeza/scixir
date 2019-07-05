@@ -29,13 +29,6 @@ defmodule Scixir.Server.Supervisor do
       {Scixir.Server.Main, {Scixir.Engine.Minio.Definition, Application.get_env(:scixir, :versions)}}
     ]
 
-    if :dev === @mix_env do
-      Supervisor.init(
-        [{Scixir.Benchmark.Progress, @progress_scopes} | children],
-        strategy: :one_for_one
-      )
-    else
-      Supervisor.init(children, strategy: :one_for_one)
-    end
+    Supervisor.init(children, strategy: :one_for_one)
   end
 end

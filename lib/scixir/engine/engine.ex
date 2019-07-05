@@ -1,6 +1,5 @@
 defmodule Scixir.Engine do
   import Mogrify
-  require Logger
 
   def process(%{intermediate_storage: intermediate_storage} = event, config) do
     out_files = do_process(intermediate_storage.in_file.file_path, config)

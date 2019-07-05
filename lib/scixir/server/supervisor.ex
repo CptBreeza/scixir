@@ -12,7 +12,7 @@ defmodule Scixir.Server.Supervisor do
   end
 
   def init(_args) do
-    Logger.info("Initializing server")
+    Logger.info fn -> "Initializing server" end
 
     %{host: host, notification_key: notification_key} = Map.new(Application.get_env(:scixir, :redis))
 

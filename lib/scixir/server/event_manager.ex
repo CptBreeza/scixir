@@ -12,6 +12,7 @@ defmodule Scixir.Server.EventManager do
   end
 
   def init(:ok) do
+    Logger.info fn -> "Ready to handle events" end
     {:producer, {:queue.new(), 0}, dispatcher: GenStage.DemandDispatcher}
   end
 
@@ -28,7 +29,7 @@ defmodule Scixir.Server.EventManager do
   end
 
   def handle_cast({:push, event}, {queue, demand}) do
-    Logger.info("Event #{event.uuid} received")
+    Logger.info fn -> "Event #{event.uuid} received" end
     dispatch_events(:queue.in(event, queue), demand, [])
   end
 

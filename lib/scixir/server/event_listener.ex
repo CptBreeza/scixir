@@ -16,7 +16,7 @@ defmodule Scixir.Server.EventListener do
 
   @impl true
   def init(notification_key) do
-    Logger.info("Start listening to Redis##{notification_key}")
+    Logger.info fn -> "Start listening to Redis##{notification_key}" end
     {:ok, notification_key, {:continue, :up}}
   end
 

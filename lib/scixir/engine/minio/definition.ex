@@ -18,7 +18,7 @@ defmodule Scixir.Engine.Minio.Definition do
       inspect event
     end
     bucket = Kernel.get_in(data, [:s3, :bucket, :name])
-    object_key = Kernel.get_in(data, [:s3, :object, :key])
+    object_key = data |> Kernel.get_in([:s3, :object, :key]) |> URI.decode
     dirname = Path.dirname(object_key)
     basename = Path.basename(object_key)
 

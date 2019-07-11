@@ -18,7 +18,7 @@ build: ## Build the Docker image
 				-t $(APP_NAME):latest .
 
 push:
-		docker tag `docker images -f reference='$(APP_NAME):latest' -q` registry.cn-hangzhou.aliyuncs.com/jet/$(APP_NAME):$(APP_VSN)
-		docker tag `docker images -f reference='$(APP_NAME):latest' -q` registry.cn-hangzhou.aliyuncs.com/jet/$(APP_NAME):latest
-		docker push registry.cn-hangzhou.aliyuncs.com/jet/$(APP_NAME):$(APP_VSN)
-		docker push registry.cn-hangzhou.aliyuncs.com/jet/$(APP_NAME):latest
+		docker tag `docker images -f reference='$(APP_NAME):latest' -q` registry.cn-hongkong.aliyuncs.com/jet/$(APP_NAME):$(APP_VSN)
+		docker tag `docker images -f reference='$(APP_NAME):latest' -q` registry.cn-hongkong.aliyuncs.com/jet/$(APP_NAME):latest
+		docker push registry.cn-hongkong.aliyuncs.com/jet/$(APP_NAME):$(APP_VSN)
+		docker push registry.cn-hongkong.aliyuncs.com/jet/$(APP_NAME):latest

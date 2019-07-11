@@ -1,4 +1,6 @@
 defmodule Scixir.Engine.Minio.Definition do
+  require Logger
+
   defmodule FileMetadata do
     defstruct [
       :bucket,
@@ -11,7 +13,10 @@ defmodule Scixir.Engine.Minio.Definition do
 
   alias Scixir.Utilities.Downloader
 
-  def analyze_event(%{data: data}) do
+  def analyze_event(%{data: data} = event) do
+    Logger.info fn ->
+      inspect event
+    end
     bucket = Kernel.get_in(data, [:s3, :bucket, :name])
     object_key = Kernel.get_in(data, [:s3, :object, :key])
     dirname = Path.dirname(object_key)

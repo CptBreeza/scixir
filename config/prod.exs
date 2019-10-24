@@ -10,7 +10,7 @@ config :ex_aws,
   secret_access_key: System.get_env("MINIO_SECRET_KEY")
 
 config :ex_aws, :s3,
-  scheme: "http://",
+  scheme: System.get_env("MINIO_SCHEME"),
   host: System.get_env("MINIO_HOST"),
   port: System.get_env("MINIO_PORT")
 
